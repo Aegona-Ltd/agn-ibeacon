@@ -4,6 +4,7 @@ import LoginScreen from "./Screen/LoginScreen";
 import Attendance from "./Screen/Attendance";
 import LoadingScreen from "./Screen/LoadingScreen";
 import CalendarScreen from "./Screen/CalendarScreen";
+import CheckoutScreen from "./Screen/CheckoutScreen"
 import CheckScreen from "./Screen/CheckScreen";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -22,6 +23,7 @@ export default function Navigator() {
         <Stack.Screen name="CheckScreen" component={CheckScreen} />
         <Stack.Screen name="Attendance" component={Attendance} />
         <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
+        <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

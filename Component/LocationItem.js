@@ -15,8 +15,6 @@ export default function LocationItem(props) {
     id: null,
   });
 
-  const [disable, setDisable] = React.useState(true);
-
   const [token, setToken] = React.useState("");
 
   React.useEffect(() => {
@@ -130,7 +128,6 @@ export default function LocationItem(props) {
       });
 
       if (response.data != []) {
-        setDisable(false);
         for (let i = 0; i < response.data.length; i++) {
           if (
             response.data[i].name == props.name &&
@@ -188,6 +185,7 @@ export default function LocationItem(props) {
           avatar: props.avatar,
           checkin: moment().format("YYYY-MM-DD HH:mm:ss"),
           checkout: null,
+          indicate: null,
         },
       });
 
@@ -234,6 +232,7 @@ export default function LocationItem(props) {
         url: "https://5ec4a69b628c160016e71280.mockapi.io/list/" + checkin.id,
         data: {
           checkout: moment().format("YYYY-MM-DD HH:mm:ss"),
+          indicate: true,
         },
       });
 
@@ -259,7 +258,6 @@ export default function LocationItem(props) {
         Distance: {props.item.accuracy.toFixed(2)} meter
       </Text>
       <Button
-        disabled={checkin.disable}
         // onPress={checkin.isCheckin ? onCheckin : onCheckout}
         onPress={checkin.isCheckin ? onPublicCheckin : onPublicCheckout}
         buttonStyle={checkin.isCheckin ? styles.btnIn : styles.btnOut}

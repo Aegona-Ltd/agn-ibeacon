@@ -84,6 +84,10 @@ export default function CheckScreen({ route, navigation }) {
     }
   }
 
+  async function onCheckoutScreen() {
+    navigation.navigate("CheckoutScreen", name);
+  }
+
   async function beaconSetup() {
     if (isAndroid) {
       const granted = await requestLocationPermission();
@@ -148,9 +152,16 @@ export default function CheckScreen({ route, navigation }) {
       <FAB
         loading={loading}
         style={styles.fab}
-        color="#FFF"
+        color="#000"
         icon="database-search"
         onPress={refreshScan}
+      />
+
+      <FAB
+        style={styles.fabCheckout}
+        color="#FFF"
+        icon="account-check-outline"
+        onPress={onCheckoutScreen}
       />
     </View>
   );
@@ -164,8 +175,16 @@ const styles = StyleSheet.create({
   fab: {
     position: "absolute",
     margin: 16,
-    backgroundColor: "#F00",
+    backgroundColor: "#FF9",
     right: 0,
+    bottom: 0,
+  },
+
+  fabCheckout: {
+    position: "absolute",
+    margin: 16,
+    backgroundColor: "#F00",
+    left: 0,
     bottom: 0,
   },
 });
