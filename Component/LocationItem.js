@@ -15,18 +15,13 @@ export default function LocationItem(props) {
     id: null,
   });
 
-  const [token, setToken] = React.useState({
-    fcmToken: "",
-  });
-
-  const [uuid, setUuid] = React.useState({
-    id: "",
-  });
+  const [token, setToken] = React.useState("");
 
   React.useEffect(() => {
-   // getData();
+    // getData();
     //getBeaconData();
     checkPermission();
+    getPublicData();
     createNotificationListeners();
   }, []);
 
@@ -34,9 +29,7 @@ export default function LocationItem(props) {
     const enabled = await firebase.messaging().hasPermission();
     if (enabled) {
       const fcmToken = await firebase.messaging().getToken();
-      setToken({
-        fcmToken: fcmToken,
-      });
+      setToken(fcmToken);
     } else {
       try {
         await firebase.messaging().requestPermission();
@@ -53,7 +46,7 @@ export default function LocationItem(props) {
           "key=AAAA5aEUtmU:APA91bHHzOIIgfS1cI7m7oPphXdQuWDA6T-H12hcCIGGhWm7e-XIw8LpABfSXn3ZuRsUhrtEROlbHjgd-a-L2i2bYnqNexPHNc5AKeVwil2siJ134-klFxH6wZkHwfFh7S40q74YsAMW",
       },
       body: JSON.stringify({
-        to: token.fcmToken,
+        to: token,
         notification: {
           android_channel_id: "test-channel",
           title: "Checkin/out success",
@@ -68,10 +61,10 @@ export default function LocationItem(props) {
 
   async function createNotificationListeners() {
     const channel = new firebase.notifications.Android.Channel(
-      'test-channel',
-      'Test Channel',
-      firebase.notifications.Android.Importance.Max,
-    ).setDescription('My apps test channel');
+      "test-channel",
+      "Test Channel",
+      firebase.notifications.Android.Importance.Max
+    ).setDescription("My apps test channel");
     firebase.notifications().android.createChannel(channel);
     firebase.notifications().onNotification((notifications) => {
       firebase.notifications().displayNotification(notifications);
@@ -127,6 +120,32 @@ export default function LocationItem(props) {
   //   }
   // }
 
+  async function getPublicData() {
+    try {
+      let response = await axios({
+        method: "GET",
+        url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
+      });
+
+      if (response.data != []) {
+        for (let i = 0; i < response.data.length; i++) {
+          if (
+            response.data[i].name == props.name &&
+            response.data[i].uuid == props.item.uuid &&
+            response.data[i].checkout == null
+          ) {
+            setCheckin({
+              isCheckin: false,
+              id: response.data[i].id,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // async function onCheckin() {
   //   try {
   //     let response = await axios({
@@ -155,7 +174,7 @@ export default function LocationItem(props) {
   //   }
   // }
 
-  async function onPublicCheckin(){
+  async function onPublicCheckin() {
     try {
       let response = await axios({
         method: "POST",
@@ -205,7 +224,7 @@ export default function LocationItem(props) {
   //   }
   // }
 
-  async function onPublicCheckout(){
+  async function onPublicCheckout() {
     try {
       let response = await axios({
         method: "PUT",

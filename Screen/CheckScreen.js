@@ -18,13 +18,14 @@ import {
 import * as Permissions from "expo-permissions";
 import _ from "lodash";
 import Kontakt, { KontaktModule } from "react-native-kontaktio";
+import NetInfo from "@react-native-community/netinfo";
 
 export default function CheckScreen({ route, navigation }) {
   // const { jwt } = route.params;
   // const { user } = route.params;
 
-  const {name} = route.params;
-  const {avatar} = route.params;
+  const { name } = route.params;
+  const { avatar } = route.params;
 
   const { connect, init, startDiscovery, startScanning } = Kontakt;
   const kontaktEmitter = new NativeEventEmitter(KontaktModule);
@@ -36,12 +37,18 @@ export default function CheckScreen({ route, navigation }) {
   });
 
   const [loading, setLoading] = React.useState(false);
+  const [internet, setInternet] = React.useState(true);
 
   React.useEffect(() => {
+    checkInternet();
     beaconSetup();
-    
   }, []);
 
+  async function checkInternet() {
+    NetInfo.addEventListener((state) => {
+      setInternet(state.isConnected);
+    });
+  }
 
   async function refreshScan() {
     setLoading(!loading);
@@ -113,18 +120,19 @@ export default function CheckScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <UserToolbar 
-      navigation={navigation} 
-      // jwt={jwt} 
-      // user={user} 
-      name = {name}
+      <UserToolbar
+        navigation={navigation}
+        // jwt={jwt}
+        // user={user}
+        name={name}
       />
       <View style={styles.container}>
         <UserInfo
           // name={user.name}
           // email={user.email}
           // avatar={user.avatar}
-          name = {name}
+          internet={internet}
+          name={name}
           avatar={avatar}
           navigation={navigation}
         />
@@ -132,7 +140,7 @@ export default function CheckScreen({ route, navigation }) {
           data={newDateData.dateData}
           // user={user}
           // jwt={jwt}
-          name = {name}
+          name={name}
           avatar={avatar}
           navigation={navigation}
         />

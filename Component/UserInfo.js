@@ -13,7 +13,8 @@ export default function UserInfo(props) {
     <Card title={"Today, " + moment().format("DD-MM-YYYY")}>
       <ListItem
         title={props.name}
-        subtitle={props.email}
+        // subtitle={props.email}
+        subtitle={props.internet ? "You are Online" : "You are Offine"}
         leftAvatar={{
           rounded: true,
           source: { uri: props.avatar },

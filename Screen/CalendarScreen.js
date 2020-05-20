@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, FlatList, View, Text } from "react-native";
+import { StyleSheet, FlatList, View, Text, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Overlay } from "react-native-elements";
 import { ActivityIndicator } from "react-native-paper";
@@ -11,6 +11,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import _ from "lodash";
+import NetInfo from "@react-native-community/netinfo";
 
 export default function CalendarScreen({ route }) {
   // const { jwt } = route.params;
@@ -30,8 +31,8 @@ export default function CalendarScreen({ route }) {
   });
 
   React.useEffect(() => {
-   // getData(day.selected);
-   getPublicData(day.selected);
+    // getData(day.selected);
+    getPublicData(day.selected);
   }, []);
 
   // async function getData(date) {
@@ -72,38 +73,49 @@ export default function CalendarScreen({ route }) {
   // }
 
   async function getPublicData(date) {
-    try {
-      await data.data.pop();
-      await fullData.fullData.pop();
-      setTimeout(() => {
-        setVisible(false);
-      }, 3000);
-      let response = await axios({
-        method: "GET",
-        url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
-      });
+    await data.data.pop();
+    await fullData.fullData.pop();
+    if (data.data.length == 0 && fullData.fullData.length == 0) {
+      NetInfo.addEventListener(async (state) => {
+        if (state.isConnected) {
+          try {
+            setTimeout(() => {
+              setVisible(false);
+            }, 3000);
+            let response = await axios({
+              method: "GET",
+              url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
+            });
 
-      if (response.data != []) {
-        setDay({
-          selected: date,
-        });
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].name == name) {
-            if (
-              moment(response.data[i].checkin).format("YYYY-MM-DD") == date ||
-              moment(response.data[i].checkout).format("YYYY-MM-DD") == date
-            ) {
-              data.data.push(response.data[i]);
+            if (response.data != []) {
+              setDay({
+                selected: date,
+              });
+              for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].name == name) {
+                  if (
+                    moment(response.data[i].checkin).format("YYYY-MM-DD") ==
+                      date ||
+                    moment(response.data[i].checkout).format("YYYY-MM-DD") ==
+                      date
+                  ) {
+                    data.data.push(response.data[i]);
+                  }
+                }
+              }
+
+              setFullData({
+                fullData: data.data,
+              });
             }
+          } catch (error) {
+            console.log(error);
+            Alert.alert("Please Check Your Internet");
           }
+        } else {
+          Alert.alert("Please Check Your Internet");
         }
-
-        setFullData({
-          fullData: data.data,
-        });
-      }
-    } catch (error) {
-      console.log(error);
+      });
     }
   }
 

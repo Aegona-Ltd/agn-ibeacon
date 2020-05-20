@@ -12,6 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import NetInfo from "@react-native-community/netinfo";
 
 export default function LoginScreen({ navigation }) {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -44,26 +45,35 @@ export default function LoginScreen({ navigation }) {
   // }
 
   async function publicLogin() {
-    if (username != "" && password != "") {
-      axios
-        .get("https://5ec4a69b628c160016e71280.mockapi.io/user")
-        .then(function (response) {
-          for (let i = 0; i < response.data.length; i++) {
-            if (
-              username == response.data[i].username &&
-              password == response.data[i].password
-            ) {
-              AsyncStorage.setItem("data", JSON.stringify(response.data[i]));
-              navigation.replace("CheckScreen", response.data[i]);
-            }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      Alert.alert("Please type username and password");
-    }
+    NetInfo.addEventListener((state) => {
+      if (state.isConnected) {
+        if (username != "" && password != "") {
+          axios
+            .get("https://5ec4a69b628c160016e71280.mockapi.io/user")
+            .then(function (response) {
+              for (let i = 0; i < response.data.length; i++) {
+                if (
+                  username == response.data[i].username &&
+                  password == response.data[i].password
+                ) {
+                  AsyncStorage.setItem(
+                    "data",
+                    JSON.stringify(response.data[i])
+                  );
+                  navigation.replace("CheckScreen", response.data[i]);
+                }
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          Alert.alert("Please type username and password");
+        }
+      } else {
+        Alert.alert("Please Check Your Internet");
+      }
+    });
   }
 
   return (

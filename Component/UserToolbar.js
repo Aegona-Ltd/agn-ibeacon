@@ -22,10 +22,10 @@ export default function UserToolbar(props) {
         // onPress={() => props.navigation.navigate("Attendance", props.jwt)}
         onPress={() => props.navigation.navigate("Attendance")}
       />
-      <Appbar.Action icon="calendar-month" 
-      // onPress={onCalendar} 
-      onPress={onPublicCalendar}
-
+      <Appbar.Action
+        icon="calendar-month"
+        // onPress={onCalendar}
+        onPress={onPublicCalendar}
       />
     </Appbar.Header>
   );
