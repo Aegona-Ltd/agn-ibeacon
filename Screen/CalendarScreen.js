@@ -117,7 +117,8 @@ export default function CalendarScreen({ route }) {
         markedDates={{
           [day.selected]: { selected: true },
         }}
-        onDayPress={(day) => getData(day.dateString)}
+        // onDayPress={(day) => getData(day.dateString)}
+        onDayPress={(day) => getPublicData(day.dateString)}
       />
 
       <Overlay isVisible={visible}>
