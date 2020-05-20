@@ -14,37 +14,52 @@ import {
 } from "react-native-responsive-screen";
 
 export default function LoginScreen({ navigation }) {
-  const [showPassword, setShowPassword] = React.useState({
-    show: false,
-  });
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  const [username, setUsername] = React.useState({
-    username: "",
-  });
+  const [username, setUsername] = React.useState("");
 
-  const [password, setPassword] = React.useState({
-    password: "",
-  });
+  const [password, setPassword] = React.useState("");
 
   async function toggleShowPassword() {
-    setShowPassword({
-      show: !showPassword.show,
-    });
+    setShowPassword(!showPassword);
   }
 
-  async function login() {
-    if (username.username != "" && password.password != "") {
-      await axios
-        .post("http://192.168.1.6:1337/auth/local", {
-          identifier: username.username,
-          password: password.password,
+  // async function login() {
+  //   if (username.username != "" && password.password != "") {
+  //     await axios
+  //       .post("http://192.168.1.6:1337/auth/local", {
+  //         identifier: username.username,
+  //         password: password.password,
+  //       })
+  //       .then((response) => {
+  //         AsyncStorage.setItem("data", JSON.stringify(response.data));
+  //         navigation.replace("CheckScreen", response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.log("An error occurred:", error);
+  //       });
+  //   } else {
+  //     Alert.alert("Please type username and password");
+  //   }
+  // }
+
+  async function publicLogin() {
+    if (username != "" && password != "") {
+      axios
+        .get("https://5ec4a69b628c160016e71280.mockapi.io/user")
+        .then(function (response) {
+          for (let i = 0; i < response.data.length; i++) {
+            if (
+              username == response.data[i].username &&
+              password == response.data[i].password
+            ) {
+              AsyncStorage.setItem("data", JSON.stringify(response.data[i]));
+              navigation.replace("CheckScreen", response.data[i]);
+            }
+          }
         })
-        .then((response) => {
-          AsyncStorage.setItem("data", JSON.stringify(response.data));
-          navigation.replace("CheckScreen", response.data);
-        })
-        .catch((error) => {
-          console.log("An error occurred:", error);
+        .catch(function (error) {
+          console.log(error);
         });
     } else {
       Alert.alert("Please type username and password");
@@ -65,12 +80,8 @@ export default function LoginScreen({ navigation }) {
           placeholder="Username or email"
           placeholderTextColor="#FFF"
           inputStyle={{ fontSize: 15 }}
-          onChangeText={(value) =>
-            setUsername({
-              username: value,
-            })
-          }
-          value={username.username}
+          onChangeText={(value) => setUsername(value)}
+          value={username}
         />
         <Input
           placeholder="Password"
@@ -82,22 +93,19 @@ export default function LoginScreen({ navigation }) {
               onPress={toggleShowPassword}
             />
           }
-          value={password.password}
+          value={password}
           placeholderTextColor="#FFF"
           inputStyle={{ fontSize: 15 }}
-          secureTextEntry={!showPassword.show}
-          onChangeText={(value) =>
-            setPassword({
-              password: value,
-            })
-          }
+          secureTextEntry={!showPassword}
+          onChangeText={(value) => setPassword(value)}
         />
       </View>
 
       <Button
         buttonStyle={{ marginHorizontal: wp("5%") }}
         title="LOG IN"
-        onPress={login}
+        //onPress={login}
+        onPress={publicLogin}
       />
     </ImageBackground>
   );

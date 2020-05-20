@@ -20,8 +20,11 @@ import _ from "lodash";
 import Kontakt, { KontaktModule } from "react-native-kontaktio";
 
 export default function CheckScreen({ route, navigation }) {
-  const { jwt } = route.params;
-  const { user } = route.params;
+  // const { jwt } = route.params;
+  // const { user } = route.params;
+
+  const {name} = route.params;
+  const {avatar} = route.params;
 
   const { connect, init, startDiscovery, startScanning } = Kontakt;
   const kontaktEmitter = new NativeEventEmitter(KontaktModule);
@@ -110,18 +113,27 @@ export default function CheckScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <UserToolbar navigation={navigation} jwt={jwt} user={user} />
+      <UserToolbar 
+      navigation={navigation} 
+      // jwt={jwt} 
+      // user={user} 
+      name = {name}
+      />
       <View style={styles.container}>
         <UserInfo
-          name={user.name}
-          email={user.email}
-          avatar={user.avatar}
+          // name={user.name}
+          // email={user.email}
+          // avatar={user.avatar}
+          name = {name}
+          avatar={avatar}
           navigation={navigation}
         />
         <LocationList
           data={newDateData.dateData}
-          user={user}
-          jwt={jwt}
+          // user={user}
+          // jwt={jwt}
+          name = {name}
+          avatar={avatar}
           navigation={navigation}
         />
       </View>

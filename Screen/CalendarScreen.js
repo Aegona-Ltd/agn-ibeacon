@@ -13,8 +13,9 @@ import {
 import _ from "lodash";
 
 export default function CalendarScreen({ route }) {
-  const { jwt } = route.params;
-  const { user } = route.params;
+  // const { jwt } = route.params;
+  // const { user } = route.params;
+  const name = route.params;
   const [day, setDay] = React.useState({
     selected: moment().format("YYYY-MM-DD"),
   });
@@ -29,10 +30,48 @@ export default function CalendarScreen({ route }) {
   });
 
   React.useEffect(() => {
-    getData(day.selected);
+   // getData(day.selected);
+   getPublicData(day.selected);
   }, []);
 
-  async function getData(date) {
+  // async function getData(date) {
+  //   try {
+  //     await data.data.pop();
+  //     await fullData.fullData.pop();
+  //     setTimeout(() => {
+  //       setVisible(false);
+  //     }, 3000);
+  //     let response = await axios({
+  //       method: "GET",
+  //       url: "http://192.168.1.6:1337/lists",
+  //       headers: { Authorization: `Bearer ${jwt}` },
+  //     });
+
+  //     if (response.data != []) {
+  //       setDay({
+  //         selected: date,
+  //       });
+  //       for (let i = 0; i < response.data.length; i++) {
+  //         if (response.data[i].name == user.name) {
+  //           if (
+  //             moment(response.data[i].checkin).format("YYYY-MM-DD") == date ||
+  //             moment(response.data[i].checkout).format("YYYY-MM-DD") == date
+  //           ) {
+  //             data.data.push(response.data[i]);
+  //           }
+  //         }
+  //       }
+
+  //       setFullData({
+  //         fullData: data.data,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function getPublicData(date) {
     try {
       await data.data.pop();
       await fullData.fullData.pop();
@@ -41,8 +80,7 @@ export default function CalendarScreen({ route }) {
       }, 3000);
       let response = await axios({
         method: "GET",
-        url: "http://192.168.1.6:1337/lists",
-        headers: { Authorization: `Bearer ${jwt}` },
+        url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
       });
 
       if (response.data != []) {
@@ -50,7 +88,7 @@ export default function CalendarScreen({ route }) {
           selected: date,
         });
         for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].name == user.name) {
+          if (response.data[i].name == name) {
             if (
               moment(response.data[i].checkin).format("YYYY-MM-DD") == date ||
               moment(response.data[i].checkout).format("YYYY-MM-DD") == date

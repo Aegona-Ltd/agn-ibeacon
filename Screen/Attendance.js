@@ -12,7 +12,7 @@ import { SearchBar } from "react-native-elements";
 import EmployeeItem from "../Component/EmployeeItem";
 
 export default function Attendance({ route }) {
-  const jwt = route.params;
+  // const jwt = route.params;
   const [search, setSearch] = React.useState({
     searchFilter: "",
     data: [],
@@ -24,15 +24,39 @@ export default function Attendance({ route }) {
 
   const [visible, setVisible] = React.useState(true);
 
-  async function getData() {
+  // async function getData() {
+  //   try {
+  //     setTimeout(() => {
+  //       setVisible(false);
+  //     }, 3000);
+  //     const response = await axios({
+  //       method: "GET",
+  //       url: "http://192.168.1.6:1337/lists",
+  //       headers: { Authorization: `Bearer ${jwt}` },
+  //     });
+
+  //     if (response.data != []) {
+  //       setSearch({
+  //         data: response.data,
+  //       });
+
+  //       setData({
+  //         fullData: response.data,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function getPublicData() {
     try {
       setTimeout(() => {
         setVisible(false);
       }, 3000);
       const response = await axios({
         method: "GET",
-        url: "http://192.168.1.6:1337/lists",
-        headers: { Authorization: `Bearer ${jwt}` },
+        url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
       });
 
       if (response.data != []) {
@@ -69,7 +93,8 @@ export default function Attendance({ route }) {
   }
 
   React.useEffect(() => {
-    getData();
+    //getData();
+    getPublicData();
   }, []);
 
   return (

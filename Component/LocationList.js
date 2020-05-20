@@ -14,7 +14,13 @@ export default function LocationList(props) {
         data={props.data}
         removeClippedSubviews={true}
         renderItem={({ item }) => (
-          <LocationItem item={item} user={props.user} jwt={props.jwt} />
+          <LocationItem 
+          item={item} 
+          // user={props.user} 
+          // jwt={props.jwt} 
+          name = {props.name}
+          avatar = {props.avatar}
+          />
         )}
         keyExtractor={(item) => item.uuid}
       />

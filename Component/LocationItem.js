@@ -24,8 +24,8 @@ export default function LocationItem(props) {
   });
 
   React.useEffect(() => {
-    getData();
-    getBeaconData();
+   // getData();
+    //getBeaconData();
     checkPermission();
     createNotificationListeners();
   }, []);
@@ -78,65 +78,92 @@ export default function LocationItem(props) {
     });
   }
 
-  async function getBeaconData() {
-    try {
-      let response = await axios({
-        method: "GET",
-        url: "http://192.168.1.6:1337/beacons",
-        headers: { Authorization: `Bearer ${props.jwt}` },
-      });
+  // async function getBeaconData() {
+  //   try {
+  //     let response = await axios({
+  //       method: "GET",
+  //       url: "http://192.168.1.6:1337/beacons",
+  //       headers: { Authorization: `Bearer ${props.jwt}` },
+  //     });
 
-      if (response.data != []) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].uuid == props.item.uuid) {
-            setUuid({
-              id: response.data[i].name,
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //     if (response.data != []) {
+  //       for (let i = 0; i < response.data.length; i++) {
+  //         if (response.data[i].uuid == props.item.uuid) {
+  //           setUuid({
+  //             id: response.data[i].name,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  async function getData() {
-    try {
-      let response = await axios({
-        method: "GET",
-        url: "http://192.168.1.6:1337/lists",
-        headers: { Authorization: `Bearer ${props.jwt}` },
-      });
+  // async function getData() {
+  //   try {
+  //     let response = await axios({
+  //       method: "GET",
+  //       url: "http://192.168.1.6:1337/lists",
+  //       headers: { Authorization: `Bearer ${props.jwt}` },
+  //     });
 
-      if (response.data != []) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (
-            response.data[i].name == props.user.name &&
-            response.data[i].uuid == props.item.uuid &&
-            response.data[i].checkout == null
-          ) {
-            setCheckin({
-              isCheckin: false,
-              id: response.data[i].id,
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //     if (response.data != []) {
+  //       for (let i = 0; i < response.data.length; i++) {
+  //         if (
+  //           response.data[i].name == props.user.name &&
+  //           response.data[i].uuid == props.item.uuid &&
+  //           response.data[i].checkout == null
+  //         ) {
+  //           setCheckin({
+  //             isCheckin: false,
+  //             id: response.data[i].id,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  async function onCheckin() {
+  // async function onCheckin() {
+  //   try {
+  //     let response = await axios({
+  //       method: "POST",
+  //       url: "http://192.168.1.6:1337/lists",
+  //       headers: { Authorization: `Bearer ${props.jwt}` },
+  //       data: {
+  //         uuid: props.item.uuid,
+  //         name: props.user.name,
+  //         avatar: props.user.avatar,
+  //         checkin: moment().format("YYYY-MM-DD HH:mm:ss"),
+  //         checkout: null,
+  //       },
+  //     });
+
+  //     if (response.data != []) {
+  //       setCheckin({
+  //         isCheckin: false,
+  //         id: response.data.id,
+  //       });
+  //       Alert.alert("Checkin Success!");
+  //       sendNotification();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function onPublicCheckin(){
     try {
       let response = await axios({
         method: "POST",
-        url: "http://192.168.1.6:1337/lists",
-        headers: { Authorization: `Bearer ${props.jwt}` },
+        url: "https://5ec4a69b628c160016e71280.mockapi.io/list",
         data: {
           uuid: props.item.uuid,
-          name: props.user.name,
-          avatar: props.user.avatar,
+          name: props.name,
+          avatar: props.avatar,
           checkin: moment().format("YYYY-MM-DD HH:mm:ss"),
           checkout: null,
         },
@@ -155,12 +182,34 @@ export default function LocationItem(props) {
     }
   }
 
-  async function onCheckout() {
+  // async function onCheckout() {
+  //   try {
+  //     let response = await axios({
+  //       method: "PUT",
+  //       url: "http://192.168.1.6:1337/lists/" + checkin.id,
+  //       headers: { Authorization: `Bearer ${props.jwt}` },
+  //       data: {
+  //         checkout: moment().format("YYYY-MM-DD HH:mm:ss"),
+  //       },
+  //     });
+
+  //     if (response.data != []) {
+  //       setCheckin({
+  //         isCheckin: true,
+  //       });
+  //       Alert.alert("Checkout Success!");
+  //       sendNotification();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function onPublicCheckout(){
     try {
       let response = await axios({
         method: "PUT",
-        url: "http://192.168.1.6:1337/lists/" + checkin.id,
-        headers: { Authorization: `Bearer ${props.jwt}` },
+        url: "https://5ec4a69b628c160016e71280.mockapi.io/list/" + checkin.id,
         data: {
           checkout: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -181,13 +230,15 @@ export default function LocationItem(props) {
   return (
     <Card>
       <Text style={styles.txt}>
-        Location: {uuid.id != "" ? uuid.id : props.item.uuid}
+        {/* Location: {uuid.id != "" ? uuid.id : props.item.uuid} */}
+        Location: {props.item.uuid}
       </Text>
       <Text style={styles.txt}>
         Distance: {props.item.accuracy.toFixed(2)} meter
       </Text>
       <Button
-        onPress={checkin.isCheckin ? onCheckin : onCheckout}
+        // onPress={checkin.isCheckin ? onCheckin : onCheckout}
+        onPress={checkin.isCheckin ? onPublicCheckin : onPublicCheckout}
         buttonStyle={checkin.isCheckin ? styles.btnIn : styles.btnOut}
         title={checkin.isCheckin ? "Check In" : "Check Out"}
       />
