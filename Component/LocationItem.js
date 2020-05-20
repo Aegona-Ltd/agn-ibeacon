@@ -15,6 +15,8 @@ export default function LocationItem(props) {
     id: null,
   });
 
+  const [disable, setDisable] = React.useState(true);
+
   const [token, setToken] = React.useState("");
 
   React.useEffect(() => {
@@ -128,6 +130,7 @@ export default function LocationItem(props) {
       });
 
       if (response.data != []) {
+        setDisable(false);
         for (let i = 0; i < response.data.length; i++) {
           if (
             response.data[i].name == props.name &&
@@ -256,6 +259,7 @@ export default function LocationItem(props) {
         Distance: {props.item.accuracy.toFixed(2)} meter
       </Text>
       <Button
+        disabled={checkin.disable}
         // onPress={checkin.isCheckin ? onCheckin : onCheckout}
         onPress={checkin.isCheckin ? onPublicCheckin : onPublicCheckout}
         buttonStyle={checkin.isCheckin ? styles.btnIn : styles.btnOut}
