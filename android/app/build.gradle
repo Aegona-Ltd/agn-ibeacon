@@ -131,7 +131,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.bt5"
+        applicationId "com.test"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -182,12 +182,15 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-safe-area-context')
-    implementation project(':react-native-kontaktio')
-    implementation project(':react-native-gesture-handler')
-    implementation project(':react-native-bluetooth-status')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':react-native-kontaktio')
+    implementation project(':react-native-bluetooth-status')
+    implementation project(':react-native-firebase')
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     addUnimodulesDependencies()
 
     if (enableHermes) {
@@ -207,3 +210,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'

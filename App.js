@@ -1,8 +1,9 @@
 import React from "react";
-import Screens from "./Screens/Screens";
+import Navigator from "./Navigator";
 
 export default function App() {
-  return(
-      <Screens/>
-  );
+  React.useEffect(() => {
+    console.disableYellowBox = true;
+  }, []);
+  return <Navigator />;
 }
